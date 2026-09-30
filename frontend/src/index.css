@@ -1,0 +1,249 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Manrope:wght@300;400;500;600;700;800&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: 'Plus Jakarta Sans', 'Manrope', ui-sans-serif, system-ui, sans-serif;
+
+  /* Healthcare White + Green Theme */
+  --color-background-primary: #F8FAFC;
+  --color-background-surface: #FFFFFF;
+  --color-background-subtle: #F1F5F9;
+
+  /* Primary Brand Colors */
+  --color-primary-base: #16A34A;
+  --color-primary-dark: #15803D;
+  --color-primary-light: #DCFCE7;
+  --color-primary-subtle: #F0FDF4;
+  --color-primary-glow: rgba(22, 163, 74, 0.2);
+
+  /* Semantic Health Status Colors */
+  --color-success-base: #16A34A;
+  --color-success-light: #DCFCE7;
+  --color-success-subtle: #F0FDF4;
+
+  --color-warning-base: #D97706;
+  --color-warning-light: #FEF3C7;
+  --color-warning-subtle: #FFFBEB;
+
+  --color-danger-base: #DC2626;
+  --color-danger-light: #FEE2E2;
+  --color-danger-subtle: #FEF2F2;
+
+  --color-info-base: #0284C7;
+  --color-info-light: #E0F2FE;
+  --color-info-subtle: #F0F9FF;
+
+  /* Typography Colors */
+  --color-text-primary: #172033;
+  --color-text-secondary: #64748B;
+  --color-text-muted: #94A3B8;
+
+  /* Borders & Dividers */
+  --color-border-subtle: #F1F5F9;
+  --color-border-default: #E2E8F0;
+  --color-border-strong: #CBD5E1;
+
+  /* Radii */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-2xl: 24px;
+}
+
+/* ── Global Reset & Typography ───────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
+  text-rendering: optimizeLegibility;
+  background-color: #F8FAFC;
+  color: #172033;
+}
+
+body {
+  background-color: #F8FAFC;
+  color: #172033;
+  min-height: 100vh;
+  overflow-x: hidden;
+  letter-spacing: -0.01em;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  letter-spacing: -0.02em;
+  color: #172033;
+}
+
+*:focus-visible {
+  outline: 2px solid #16A34A;
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* ── Scrollbar ──────────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #F1F5F9; }
+::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: #94A3B8; }
+
+/* ── Clean Medical Cards ─────────────────────────────────────────────────── */
+.glass {
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 16px;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 1px 2px -1px rgba(0, 0, 0, 0.02);
+  position: relative;
+}
+
+.glass-hover {
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.glass-hover:hover {
+  background: #FFFFFF;
+  border-color: #CBD5E1;
+  box-shadow: 0 10px 25px -5px rgba(22, 163, 74, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+  transform: translateY(-2px);
+}
+.glass-hover:active {
+  transform: translateY(0) scale(0.99);
+}
+
+/* ── Shimmer & Skeleton ─────────────────────────────────────────────────── */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.skeleton {
+  background: linear-gradient(90deg, #F1F5F9 25%, #E2E8F0 50%, #F1F5F9 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  border-radius: 12px;
+}
+
+/* ── Buttons & Inputs ───────────────────────────────────────────────────── */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background-color: #16A34A;
+  color: #FFFFFF;
+  font-weight: 600;
+  font-size: 14px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(22, 163, 74, 0.16);
+}
+.btn-primary:hover {
+  background-color: #15803D;
+  box-shadow: 0 4px 12px rgba(22, 163, 74, 0.25);
+  transform: translateY(-1px);
+}
+.btn-primary:active {
+  transform: translateY(1px);
+}
+
+.btn-glass {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 18px;
+  background: #FFFFFF;
+  color: #172033;
+  font-weight: 600;
+  font-size: 14px;
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+.btn-glass:hover {
+  background: #F8FAFC;
+  border-color: #CBD5E1;
+  color: #15803D;
+}
+.btn-glass:active {
+  transform: translateY(1px);
+}
+
+.input-glass {
+  width: 100%;
+  padding: 10px 14px;
+  background: #FFFFFF;
+  border: 1px solid #CBD5E1;
+  border-radius: 12px;
+  color: #172033;
+  font-family: inherit;
+  font-size: 14px;
+  outline: none;
+  transition: all 0.2s ease;
+}
+.input-glass::placeholder {
+  color: #94A3B8;
+}
+.input-glass:focus {
+  border-color: #16A34A;
+  box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.15);
+  background: #FFFFFF;
+}
+
+/* ── Badges ─────────────────────────────────────────────────────────────── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 9999px;
+  letter-spacing: 0.02em;
+}
+.badge-low {
+  background: #F0FDF4;
+  color: #15803D;
+  border: 1px solid #DCFCE7;
+}
+.badge-moderate {
+  background: #FFFBEB;
+  color: #B45309;
+  border: 1px solid #FDE68A;
+}
+.badge-high {
+  background: #FEF2F2;
+  color: #B91C1C;
+  border: 1px solid #FECACA;
+}
+
+/* ── Structural Layouts ─────────────────────────────────────────────────── */
+.page-container {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 32px 40px;
+  width: 100%;
+}
+@media (max-width: 1024px) { .page-container { padding: 24px; } }
+@media (max-width: 640px) { .page-container { padding: 16px; } }
+
+/* Custom Scrollbar for inner elements */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #94A3B8;
+}

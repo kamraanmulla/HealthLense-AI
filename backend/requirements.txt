@@ -1,0 +1,53 @@
+# HealthLens AI — Python Dependencies
+# Python 3.11+
+# Install: pip install -r requirements.txt
+
+# ── Web Framework ────────────────────────────────────────────────────────────
+fastapi==0.111.0
+uvicorn[standard]==0.29.0
+python-multipart==0.0.9
+
+# ── AI (Gemini) ────────────────────────────────────────────────────────
+google-genai>=0.2.0
+
+# ── Database ──────────────────────────────────────────────────────────────────
+sqlalchemy==2.0.30
+alembic==1.13.1
+aiosqlite==0.20.0
+
+# ── Authentication ────────────────────────────────────────────────────────────
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+
+# ── Validation & Settings ─────────────────────────────────────────────────────
+pydantic==2.7.1
+pydantic-settings==2.3.0
+
+# ── OCR ──────────────────────────────────────────────────────────────────────
+# pytesseract==0.3.10
+# Pillow>=10.3.0
+# opencv-python-headless==4.9.0.80
+# pdfplumber==0.11.0
+# PyMuPDF==1.24.4
+
+# ── HTTP Client ───────────────────────────────────────────────────────────────
+httpx==0.27.0
+
+
+# ── Rate Limiting ─────────────────────────────────────────────────────────────
+slowapi==0.1.9
+
+# ── Logging ───────────────────────────────────────────────────────────────────
+structlog==24.1.0
+
+# ── Utilities ─────────────────────────────────────────────────────────────────
+python-dotenv==1.0.1
+aiofiles==23.2.1
+
+# ── Machine Learning ──────────────────────────────────────────────────────────
+pandas>=2.2.0
+scikit-learn>=1.4.0
+joblib>=1.3.0
+
+# ── PDF Generation ────────────────────────────────────────────────────────────
+reportlab>=5.0.0
