@@ -18,6 +18,8 @@ from app.api.v1.dashboard import router as dashboard_router
 from app.api.v1.health import router as health_router
 from app.api.v1.reports import router as reports_router
 from app.api.v1.profile import router as profile_router
+from app.api.v1.insights import router as insights_router
+from app.api.v1.assistant import router as assistant_router
 
 api_v1_router = APIRouter(prefix="/api/v1")
 
@@ -26,3 +28,5 @@ api_v1_router.include_router(auth_router, prefix="/auth", tags=["Authentication"
 api_v1_router.include_router(profile_router, prefix="/profile", tags=["Profile"])
 api_v1_router.include_router(reports_router, prefix="/reports", tags=["Reports"])
 api_v1_router.include_router(dashboard_router, prefix="/dashboard", tags=["Dashboard"])
+api_v1_router.include_router(insights_router, prefix="/insights", tags=["Insights & Analytics"])
+api_v1_router.include_router(assistant_router, prefix="/assistant", tags=["AI Assistant"])

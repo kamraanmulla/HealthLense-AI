@@ -167,6 +167,9 @@ class AIAnalysisResult(BaseModel):
     follow_up_tests: List[str] = Field(default_factory=list)
     long_term_monitoring: List[str] = Field(default_factory=list)
     preventive_advice: List[str] = Field(default_factory=list)
+    data_foundation: Optional[Dict[str, Any]] = None
+    rule_engine_findings: Optional[Dict[str, Any]] = None
+    knowledge_graph_context: Optional[List[Dict[str, Any]]] = None
 
     @field_validator("risk_level")
     @classmethod

@@ -1,4 +1,4 @@
-import { FileText, ArrowRight, ShieldCheck } from 'lucide-react';
+import { FileText, ArrowRight, ShieldCheck, Sparkles, TrendingUp } from 'lucide-react';
 import GlassCard from '../ui/GlassCard';
 import HealthGauge from '../ui/HealthGauge';
 import RiskBadge from '../ui/RiskBadge';
@@ -20,56 +20,71 @@ export default function HealthScoreCard({ healthScore, riskLevel, healthGrade }:
   );
 
   return (
-    <GlassCard hover className="p-7 flex flex-col h-full bg-white border border-[#E2E8F0] shadow-sm">
-      <div className="flex justify-between items-start w-full mb-6">
+    <div className="card-futuristic p-6 sm:p-7 flex flex-col h-full bg-white">
+      <div className="flex justify-between items-start w-full mb-5">
         <div>
-          <span className="text-[11px] font-bold text-[#16A34A] uppercase tracking-wider block mb-1">
-            Overall Assessment
-          </span>
-          <h2 className="text-xl font-bold text-[#172033] tracking-tight flex items-center gap-2">
-            Health Index
+          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#ECFDF5] border border-[#A7F3D0] text-[#047857] text-[10px] font-extrabold uppercase tracking-wider mb-1.5">
+            <Sparkles className="w-3 h-3 text-[#059669]" />
+            Physiological Index
+          </div>
+          <h2 className="font-display text-xl sm:text-2xl font-extrabold text-[#0F172A] tracking-tight flex items-center gap-2">
+            Health Score
             {grade && (
-              <span className="text-xs px-2 py-0.5 rounded-full bg-[#F0FDF4] border border-[#DCFCE7] text-[#15803D] font-bold">
+              <span className="text-xs px-2.5 py-0.5 rounded-full bg-gradient-to-r from-[#ECFDF5] to-[#F0FDFA] border border-[#A7F3D0] text-[#047857] font-bold shadow-2xs">
                 Grade {grade}
               </span>
             )}
           </h2>
         </div>
-        <Link 
-          to="/reports" 
-          title="View Reports"
-          className="w-8 h-8 rounded-full bg-[#F8FAFC] border border-[#E2E8F0] flex items-center justify-center text-[#64748B] hover:text-[#16A34A] hover:bg-[#F0FDF4] hover:border-[#DCFCE7] transition-all cursor-pointer"
+        <Link
+          to="/reports"
+          title="View All Lab Reports"
+          className="w-9 h-9 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] flex items-center justify-center text-[#64748B] hover:text-[#059669] hover:bg-[#F0FDF4] hover:border-[#A7F3D0] transition-all cursor-pointer shadow-2xs group"
         >
-          <ArrowRight className="w-4 h-4 -rotate-45" />
+          <ArrowRight className="w-4 h-4 -rotate-45 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
         </Link>
       </div>
-      
+
       {healthScore !== null ? (
-        <div className="flex flex-col items-center justify-center flex-1">
+        <div className="flex flex-col items-center justify-between flex-1">
           <motion.div
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ type: "spring", duration: 0.8 }}
-            className="relative my-2"
+            className="relative my-3"
           >
-            <HealthGauge score={healthScore} size={180} />
+            <HealthGauge score={healthScore} size={185} />
           </motion.div>
-          
-          <motion.div 
-            initial={{ y: 10, opacity: 0 }}
+
+          <motion.div
+            initial={{ y: 8, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.4 }}
-            className="mt-6 w-full flex flex-col items-center gap-2.5"
+            transition={{ delay: 0.3 }}
+            className="w-full flex flex-col items-center gap-3 pt-2"
           >
-            <RiskBadge level={riskLevel || 'UNKNOWN'} />
-            <p className="text-xs text-[#64748B] text-center font-medium">
-              {healthScore >= 80 
-                ? 'Your key laboratory parameters fall within healthy reference bounds.'
+            <div className="flex items-center gap-2">
+              <RiskBadge level={riskLevel || 'UNKNOWN'} />
+              <span className="text-[11px] font-bold text-[#64748B] bg-[#F1F5F9] px-2.5 py-1 rounded-full border border-[#E2E8F0]">
+                {healthScore >= 80 ? 'Top 12% Demographic' : healthScore >= 60 ? 'Median Baseline' : 'Attention Required'}
+              </span>
+            </div>
+
+            <p className="text-xs text-[#64748B] text-center font-medium leading-relaxed max-w-xs">
+              {healthScore >= 80
+                ? 'Your key laboratory parameters fall within healthy physiological bounds.'
                 : healthScore >= 60
-                ? 'Some parameters require monitoring or dietary/lifestyle attention.'
-                : 'Several abnormal parameters detected. Please consult your physician.'
+                ? 'Select parameters deviate slightly from target reference intervals.'
+                : 'Multiple clinical markers require review. Consult your healthcare physician.'
               }
             </p>
+
+            <Link
+              to="/insights"
+              className="mt-1 w-full py-2 px-3 rounded-xl bg-[#F8FAFC] hover:bg-[#F0FDF4] border border-[#E2E8F0] hover:border-[#A7F3D0] text-[#059669] text-xs font-bold text-center transition-all flex items-center justify-center gap-1.5 shadow-2xs"
+            >
+              <TrendingUp className="w-3.5 h-3.5" />
+              <span>Explore AI Health Trajectory &rarr;</span>
+            </Link>
           </motion.div>
         </div>
       ) : (
@@ -77,13 +92,13 @@ export default function HealthScoreCard({ healthScore, riskLevel, healthGrade }:
           <div className="w-14 h-14 rounded-2xl bg-[#F8FAFC] border border-[#E2E8F0] flex items-center justify-center mb-4 text-[#94A3B8]">
             <FileText className="w-7 h-7" />
           </div>
-          <h3 className="text-[#172033] font-bold text-sm mb-1">No Data Available</h3>
-          <p className="text-[#64748B] text-xs">Upload a medical report to compute your comprehensive health score.</p>
-          <Link to="/upload" className="mt-4 btn-primary text-xs py-2 px-3">
+          <h3 className="font-display text-[#0F172A] font-bold text-base mb-1">No Data Available</h3>
+          <p className="text-[#64748B] text-xs">Upload your first blood report to generate an integrated clinical health score.</p>
+          <Link to="/upload" className="mt-4 btn-primary text-xs py-2 px-4">
             Upload Report
           </Link>
         </div>
       )}
-    </GlassCard>
+    </div>
   );
 }

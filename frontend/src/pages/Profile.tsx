@@ -30,7 +30,7 @@ export default function Profile() {
   // Auto-calculate BMI
   const height = watch('height');
   const weight = watch('weight');
-  
+
   useEffect(() => {
     if (height && weight && height > 0 && weight > 0) {
       const heightInMeters = height / 100;
@@ -84,7 +84,7 @@ export default function Profile() {
       if (!cleanedData.age) cleanedData.age = null;
       if (!cleanedData.height) cleanedData.height = null;
       if (!cleanedData.weight) cleanedData.weight = null;
-      
+
       const updated = await profileApi.update(cleanedData);
       setProfile(updated);
       setIsEditing(false);
@@ -111,41 +111,40 @@ export default function Profile() {
     );
   }
 
-  const inputStyle = "w-full px-4 py-3 bg-white border border-[#CBD5E1] rounded-xl text-[#172033] font-medium text-sm focus:border-[#16A34A] focus:ring-2 focus:ring-[#16A34A]/15 transition-all shadow-xs placeholder-[#94A3B8]";
-  const readOnlyStyle = "w-full px-4 py-3 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl text-[#172033] font-medium text-sm cursor-default";
-  const labelStyle = "block text-[11px] font-bold text-[#64748B] uppercase tracking-widest mb-2";
-  const sectionHeaderStyle = "flex items-center gap-3 mb-6 pb-4 border-b border-[#F1F5F9]";
+  const inputStyle = "w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-900 font-medium text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/15 transition-all shadow-inner placeholder-slate-400";
+  const readOnlyStyle = "w-full px-4 py-3 bg-slate-50 border border-slate-200/80 rounded-xl text-slate-800 font-medium text-sm cursor-default";
+  const labelStyle = "block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2";
+  const sectionHeaderStyle = "flex items-center gap-3 mb-6 pb-4 border-b border-slate-100";
 
   const displayVal = (val: any) => val || '—';
-
   const weightHistory = profile?.weight_history || [];
 
   return (
     <PageTransition>
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
         <div>
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#F0FDF4] border border-[#DCFCE7] mb-4">
-            <User className="w-3.5 h-3.5 text-[#16A34A]" />
-            <span className="text-xs font-bold text-[#15803D] uppercase tracking-wider">Health Profile</span>
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-700 text-xs font-semibold mb-2">
+            <User className="w-3.5 h-3.5 text-emerald-600" />
+            <span>BASELINE CLINICAL PROFILE</span>
           </div>
-          <h1 className="text-4xl font-extrabold text-[#172033] tracking-tight mb-2">
-            Personal Information
+          <h1 className="text-2xl sm:text-3xl font-extrabold font-display text-slate-900 tracking-tight">
+            Personal Health Profile
           </h1>
-          <p className="text-[#64748B] font-medium">Contextualize your AI analysis with accurate baseline data.</p>
+          <p className="text-xs sm:text-sm text-slate-500 mt-1">Calibrate neural analysis and diagnostic insights with your clinical baseline parameters.</p>
         </div>
-        
+
         {/* Edit / Cancel Button */}
         {!isEditing ? (
           <button
             onClick={handleEdit}
-            className="px-5 py-2.5 rounded-xl bg-white border border-[#E2E8F0] text-sm font-bold text-[#64748B] hover:bg-[#F8FAFC] hover:border-[#16A34A] hover:text-[#16A34A] transition-all flex items-center gap-2 shadow-sm"
+            className="px-5 py-2.5 rounded-xl bg-white border border-slate-200 text-xs sm:text-sm font-bold text-slate-700 hover:bg-slate-50 hover:border-emerald-300 hover:text-emerald-700 transition-all flex items-center gap-2 shadow-xs cursor-pointer"
           >
-            <Pencil className="w-4 h-4" /> Edit Profile
+            <Pencil className="w-4 h-4 text-emerald-600" /> Edit Profile
           </button>
         ) : (
           <button
             onClick={handleCancel}
-            className="px-5 py-2.5 rounded-xl bg-white border border-[#FECACA] text-sm font-bold text-[#DC2626] hover:bg-[#FEF2F2] transition-all flex items-center gap-2 shadow-sm"
+            className="px-5 py-2.5 rounded-xl bg-white border border-rose-200 text-xs sm:text-sm font-bold text-rose-600 hover:bg-rose-50 transition-all flex items-center gap-2 shadow-xs cursor-pointer"
           >
             <X className="w-4 h-4" /> Cancel
           </button>
@@ -154,17 +153,17 @@ export default function Profile() {
 
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          
+
           {/* Section 1: Personal */}
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
-            <GlassCard className="p-8 h-full bg-white border border-[#E2E8F0] shadow-sm">
+          <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
+            <div className="card-futuristic p-6 sm:p-8 h-full shadow-card">
               <div className={sectionHeaderStyle}>
-                <div className="p-2 rounded-lg bg-[#F0FDF4] border border-[#DCFCE7] text-[#16A34A]">
+                <div className="w-9 h-9 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-600 flex items-center justify-center">
                   <User className="w-5 h-5" />
                 </div>
-                <h2 className="text-lg font-bold text-[#172033] tracking-tight">Identity</h2>
+                <h2 className="text-lg font-bold font-display text-slate-900 tracking-tight">Identity & Demographics</h2>
               </div>
-              
+
               {isEditing ? (
                 <div className="space-y-5">
                   <div>
@@ -208,23 +207,23 @@ export default function Profile() {
                   </div>
                   <div className="flex justify-between items-center py-2 border-t border-[#F1F5F9]">
                     <span className="text-xs font-bold text-[#94A3B8] uppercase tracking-widest">Date of Birth</span>
-                    <span className="text-sm font-bold text-[#172033]">{displayVal(profile?.dob)}</span>
+                    <span className="text-sm font-bold text-slate-800">{displayVal(profile?.dob)}</span>
                   </div>
                 </div>
               )}
-            </GlassCard>
+            </div>
           </motion.div>
 
           {/* Section 2: Body */}
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
-            <GlassCard className="p-8 h-full bg-white border border-[#E2E8F0] shadow-sm">
+          <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
+            <div className="card-futuristic p-6 sm:p-8 h-full shadow-card">
               <div className={sectionHeaderStyle}>
-                <div className="p-2 rounded-lg bg-[#F0FDF4] border border-[#DCFCE7] text-[#16A34A]">
+                <div className="w-9 h-9 rounded-xl bg-teal-50 border border-teal-200 text-teal-600 flex items-center justify-center">
                   <Activity className="w-5 h-5" />
                 </div>
-                <h2 className="text-lg font-bold text-[#172033] tracking-tight">Body Metrics</h2>
+                <h2 className="text-lg font-bold font-display text-slate-900 tracking-tight">Body Biometrics</h2>
               </div>
-              
+
               {isEditing ? (
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
                   <div>
@@ -238,9 +237,9 @@ export default function Profile() {
                   <div>
                     <label className={labelStyle}>BMI</label>
                     <div className="relative">
-                      <input type="number" {...register('bmi')} className={`${readOnlyStyle} text-[#16A34A] font-extrabold bg-[#F0FDF4] border-[#DCFCE7]`} readOnly placeholder="-" />
+                      <input type="number" {...register('bmi')} className={`${readOnlyStyle} text-emerald-700 font-extrabold bg-emerald-50 border-emerald-200`} readOnly placeholder="-" />
                       <div className="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
-                        <span className="text-[10px] font-bold text-[#94A3B8] uppercase tracking-widest">Auto</span>
+                        <span className="text-[10px] font-bold text-emerald-600 uppercase tracking-widest">Auto</span>
                       </div>
                     </div>
                   </div>
@@ -248,32 +247,32 @@ export default function Profile() {
               ) : (
                 <div className="space-y-4">
                   <div className="flex justify-between items-center py-2">
-                    <span className="text-xs font-bold text-[#94A3B8] uppercase tracking-widest">Height</span>
-                    <span className="text-sm font-bold text-[#172033]">{profile?.height ? `${profile.height} ${profile.height_unit || 'cm'}` : '—'}</span>
+                    <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Height</span>
+                    <span className="text-sm font-bold text-slate-800">{profile?.height ? `${profile.height} ${profile.height_unit || 'cm'}` : '—'}</span>
                   </div>
-                  <div className="flex justify-between items-center py-2 border-t border-[#F1F5F9]">
-                    <span className="text-xs font-bold text-[#94A3B8] uppercase tracking-widest">Weight</span>
-                    <span className="text-sm font-bold text-[#172033]">{profile?.weight ? `${profile.weight} ${profile.weight_unit || 'kg'}` : '—'}</span>
+                  <div className="flex justify-between items-center py-2 border-t border-slate-100">
+                    <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Weight</span>
+                    <span className="text-sm font-bold text-slate-800">{profile?.weight ? `${profile.weight} ${profile.weight_unit || 'kg'}` : '—'}</span>
                   </div>
-                  <div className="flex justify-between items-center py-2 border-t border-[#F1F5F9]">
-                    <span className="text-xs font-bold text-[#94A3B8] uppercase tracking-widest">BMI</span>
-                    <span className="text-sm font-extrabold text-[#16A34A]">{profile?.bmi ?? '—'}</span>
+                  <div className="flex justify-between items-center py-2 border-t border-slate-100">
+                    <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">BMI</span>
+                    <span className="text-sm font-extrabold font-mono text-emerald-600">{profile?.bmi ?? '—'}</span>
                   </div>
                 </div>
               )}
-            </GlassCard>
+            </div>
           </motion.div>
 
           {/* Section 3: Medical */}
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
-            <GlassCard className="p-8 h-full bg-white border border-[#E2E8F0] shadow-sm">
+          <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
+            <div className="card-futuristic p-6 sm:p-8 h-full shadow-card">
               <div className={sectionHeaderStyle}>
-                <div className="p-2 rounded-lg bg-[#FEF2F2] border border-[#FECACA] text-[#DC2626]">
+                <div className="w-9 h-9 rounded-xl bg-rose-50 border border-rose-200 text-rose-600 flex items-center justify-center">
                   <HeartPulse className="w-5 h-5" />
                 </div>
-                <h2 className="text-lg font-bold text-[#172033] tracking-tight">Medical History</h2>
+                <h2 className="text-lg font-bold font-display text-slate-900 tracking-tight">Clinical Background</h2>
               </div>
-              
+
               {isEditing ? (
                 <div className="space-y-5">
                   <div>
@@ -304,32 +303,32 @@ export default function Profile() {
               ) : (
                 <div className="space-y-4">
                   <div className="py-2">
-                    <span className="text-xs font-bold text-[#94A3B8] uppercase tracking-widest">Conditions</span>
-                    <p className="text-sm font-medium text-[#172033] mt-1">{displayVal(profile?.medical_conditions)}</p>
+                    <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Conditions</span>
+                    <p className="text-sm font-medium text-slate-800 mt-1">{displayVal(profile?.medical_conditions)}</p>
                   </div>
-                  <div className="py-2 border-t border-[#F1F5F9]">
-                    <span className="text-xs font-bold text-[#94A3B8] uppercase tracking-widest">Allergies</span>
-                    <p className="text-sm font-medium text-[#172033] mt-1">{displayVal(profile?.allergies)}</p>
+                  <div className="py-2 border-t border-slate-100">
+                    <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Allergies</span>
+                    <p className="text-sm font-medium text-slate-800 mt-1">{displayVal(profile?.allergies)}</p>
                   </div>
-                  <div className="py-2 border-t border-[#F1F5F9]">
-                    <span className="text-xs font-bold text-[#94A3B8] uppercase tracking-widest">Medications</span>
-                    <p className="text-sm font-medium text-[#172033] mt-1">{displayVal(profile?.medications)}</p>
+                  <div className="py-2 border-t border-slate-100">
+                    <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Medications</span>
+                    <p className="text-sm font-medium text-slate-800 mt-1">{displayVal(profile?.medications)}</p>
                   </div>
                 </div>
               )}
-            </GlassCard>
+            </div>
           </motion.div>
 
           {/* Section 4: Lifestyle */}
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
-            <GlassCard className="p-8 h-full bg-white border border-[#E2E8F0] shadow-sm">
+          <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
+            <div className="card-futuristic p-6 sm:p-8 h-full shadow-card">
               <div className={sectionHeaderStyle}>
-                <div className="p-2 rounded-lg bg-[#FFFBEB] border border-[#FDE68A] text-[#D97706]">
+                <div className="w-9 h-9 rounded-xl bg-amber-50 border border-amber-200 text-amber-600 flex items-center justify-center">
                   <Coffee className="w-5 h-5" />
                 </div>
-                <h2 className="text-lg font-bold text-[#172033] tracking-tight">Lifestyle</h2>
+                <h2 className="text-lg font-bold font-display text-slate-900 tracking-tight">Lifestyle & Habits</h2>
               </div>
-              
+
               {isEditing ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                   <div>
@@ -353,59 +352,59 @@ export default function Profile() {
                   </div>
                   <div>
                     <label className={labelStyle}>Dietary Preference</label>
-                    <input type="text" {...register('dietary_preference')} className={inputStyle} placeholder="e.g. Keto, Vegan" />
+                    <input type="text" {...register('dietary_preference')} className={inputStyle} placeholder="e.g. Mediterranean, Vegetarian" />
                   </div>
                   <div>
                     <label className={labelStyle}>Sleep Habits</label>
-                    <input type="text" {...register('sleep_information')} className={inputStyle} placeholder="e.g. 6-8 hours" />
+                    <input type="text" {...register('sleep_information')} className={inputStyle} placeholder="e.g. 7-8 hours restful" />
                   </div>
                 </div>
               ) : (
                 <div className="space-y-4">
                   <div className="flex justify-between items-center py-2">
-                    <span className="text-xs font-bold text-[#94A3B8] uppercase tracking-widest">Activity</span>
-                    <span className="text-sm font-bold text-[#172033]">{displayVal(profile?.activity_level)}</span>
+                    <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Activity</span>
+                    <span className="text-sm font-bold text-slate-800">{displayVal(profile?.activity_level)}</span>
                   </div>
-                  <div className="flex justify-between items-center py-2 border-t border-[#F1F5F9]">
-                    <span className="text-xs font-bold text-[#94A3B8] uppercase tracking-widest">Smoking</span>
-                    <span className="text-sm font-bold text-[#172033]">{displayVal(profile?.smoking_status)}</span>
+                  <div className="flex justify-between items-center py-2 border-t border-slate-100">
+                    <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Smoking</span>
+                    <span className="text-sm font-bold text-slate-800">{displayVal(profile?.smoking_status)}</span>
                   </div>
-                  <div className="flex justify-between items-center py-2 border-t border-[#F1F5F9]">
-                    <span className="text-xs font-bold text-[#94A3B8] uppercase tracking-widest">Diet</span>
-                    <span className="text-sm font-bold text-[#172033]">{displayVal(profile?.dietary_preference)}</span>
+                  <div className="flex justify-between items-center py-2 border-t border-slate-100">
+                    <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Diet</span>
+                    <span className="text-sm font-bold text-slate-800">{displayVal(profile?.dietary_preference)}</span>
                   </div>
-                  <div className="flex justify-between items-center py-2 border-t border-[#F1F5F9]">
-                    <span className="text-xs font-bold text-[#94A3B8] uppercase tracking-widest">Sleep</span>
-                    <span className="text-sm font-bold text-[#172033]">{displayVal(profile?.sleep_information)}</span>
+                  <div className="flex justify-between items-center py-2 border-t border-slate-100">
+                    <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Sleep</span>
+                    <span className="text-sm font-bold text-slate-800">{displayVal(profile?.sleep_information)}</span>
                   </div>
                 </div>
               )}
-            </GlassCard>
+            </div>
           </motion.div>
 
         </div>
 
         {/* Weight Measurement History */}
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="mt-6">
-          <GlassCard className="p-8 bg-white border border-[#E2E8F0] shadow-sm">
+        <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="mt-6">
+          <div className="card-futuristic p-6 sm:p-8 shadow-card">
             <div className={sectionHeaderStyle}>
-              <div className="p-2 rounded-lg bg-[#E0F2FE] border border-[#BAE6FD] text-[#0284C7]">
+              <div className="w-9 h-9 rounded-xl bg-cyan-50 border border-cyan-200 text-cyan-600 flex items-center justify-center">
                 <Scale className="w-5 h-5" />
               </div>
               <div>
-                <h2 className="text-lg font-bold text-[#172033] tracking-tight">Weight History</h2>
-                <p className="text-xs text-[#94A3B8] font-medium">Tracked automatically when you update your weight.</p>
+                <h2 className="text-lg font-bold font-display text-slate-900 tracking-tight">Weight Trajectory History</h2>
+                <p className="text-xs text-slate-400 font-medium">Logged automatically when you update your body measurements.</p>
               </div>
             </div>
-            
+
             {weightHistory.length > 0 ? (
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="border-b border-[#F1F5F9]">
-                      <th className="text-left text-[10px] font-bold text-[#94A3B8] uppercase tracking-widest py-3 px-4">Date</th>
-                      <th className="text-right text-[10px] font-bold text-[#94A3B8] uppercase tracking-widest py-3 px-4">Weight</th>
-                      <th className="text-right text-[10px] font-bold text-[#94A3B8] uppercase tracking-widest py-3 px-4">Change</th>
+                    <tr className="border-b border-slate-100">
+                      <th className="text-left text-[10px] font-bold text-slate-400 uppercase tracking-wider py-3 px-4">Date</th>
+                      <th className="text-right text-[10px] font-bold text-slate-400 uppercase tracking-wider py-3 px-4">Weight</th>
+                      <th className="text-right text-[10px] font-bold text-slate-400 uppercase tracking-wider py-3 px-4">Delta</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -413,20 +412,20 @@ export default function Profile() {
                       const prev = idx > 0 ? weightHistory[idx - 1].value : null;
                       const change = prev !== null ? point.value - prev : null;
                       return (
-                        <tr key={point.id} className="border-b border-[#F8FAFC] hover:bg-[#FAFBFC] transition-colors">
-                          <td className="py-3 px-4 font-medium text-[#172033]">
+                        <tr key={point.id} className="border-b border-slate-50 hover:bg-slate-50/60 transition-colors">
+                          <td className="py-3 px-4 font-medium text-slate-800">
                             {format(new Date(point.recorded_at), 'MMM d, yyyy')}
                           </td>
-                          <td className="py-3 px-4 text-right font-bold text-[#172033]">
-                            {point.value} <span className="text-xs text-[#94A3B8]">{point.unit}</span>
+                          <td className="py-3 px-4 text-right font-bold font-mono text-slate-900">
+                            {point.value} <span className="text-xs text-slate-400 font-sans">{point.unit}</span>
                           </td>
-                          <td className="py-3 px-4 text-right">
+                          <td className="py-3 px-4 text-right font-mono">
                             {change !== null ? (
-                              <span className={`text-xs font-bold ${change > 0 ? 'text-[#D97706]' : change < 0 ? 'text-[#16A34A]' : 'text-[#64748B]'}`}>
+                              <span className={`text-xs font-bold ${change > 0 ? 'text-amber-600' : change < 0 ? 'text-emerald-600' : 'text-slate-500'}`}>
                                 {change > 0 ? '+' : ''}{change.toFixed(1)} {point.unit}
                               </span>
                             ) : (
-                              <span className="text-xs text-[#94A3B8]">Baseline</span>
+                              <span className="text-xs text-slate-400">Baseline</span>
                             )}
                           </td>
                         </tr>
@@ -436,13 +435,13 @@ export default function Profile() {
                 </table>
               </div>
             ) : (
-              <div className="text-center py-10 border border-dashed border-[#E2E8F0] rounded-2xl">
-                <Scale className="w-8 h-8 text-[#CBD5E1] mx-auto mb-3" />
-                <p className="text-sm font-bold text-[#64748B]">No weight history recorded yet.</p>
-                <p className="text-xs text-[#94A3B8] mt-1">Update your weight in the Body Metrics section to start tracking.</p>
+              <div className="text-center py-10 border border-dashed border-slate-200 rounded-2xl">
+                <Scale className="w-8 h-8 text-slate-300 mx-auto mb-3" />
+                <p className="text-sm font-bold text-slate-600">No weight history recorded yet.</p>
+                <p className="text-xs text-slate-400 mt-1">Update your weight in Body Biometrics above to begin trend tracking.</p>
               </div>
             )}
-          </GlassCard>
+          </div>
         </motion.div>
 
         {/* Floating Save Bar — only visible in edit mode */}
@@ -457,9 +456,9 @@ export default function Profile() {
               <div className="p-2 rounded-full flex items-center gap-4 bg-white border border-[#E2E8F0] shadow-lg pr-2">
                 <AnimatePresence>
                   {saveSuccess && (
-                    <motion.div 
-                      initial={{ opacity: 0, x: -20, width: 0 }} 
-                      animate={{ opacity: 1, x: 0, width: 'auto' }} 
+                    <motion.div
+                      initial={{ opacity: 0, x: -20, width: 0 }}
+                      animate={{ opacity: 1, x: 0, width: 'auto' }}
                       exit={{ opacity: 0, scale: 0.9 }}
                       className="flex items-center gap-2 pl-4 text-[#16A34A] font-bold text-sm whitespace-nowrap overflow-hidden"
                     >
@@ -467,16 +466,16 @@ export default function Profile() {
                     </motion.div>
                   )}
                 </AnimatePresence>
-                <button 
+                <button
                   type="button"
                   onClick={handleCancel}
                   className="px-5 py-2.5 rounded-full text-sm font-bold text-[#64748B] hover:bg-[#F8FAFC] transition-all"
                 >
                   Cancel
                 </button>
-                <button 
-                  type="submit" 
-                  disabled={isSaving} 
+                <button
+                  type="submit"
+                  disabled={isSaving}
                   className="btn-primary rounded-full px-6 py-2.5 min-w-[150px]"
                 >
                   {isSaving ? (

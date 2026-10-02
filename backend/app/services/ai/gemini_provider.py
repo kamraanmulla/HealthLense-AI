@@ -31,7 +31,12 @@ class GeminiProvider(AIProvider):
     def __init__(self) -> None:
         self.settings = get_settings()
         self.api_key = self.settings.gemini_api_key or os.getenv("GEMINI_API_KEY", "")
-        self.model = self.settings.ai_model or "gemini-2.5-flash"
+        self.model = (
+            getattr(self.settings, "gemini_model", None)
+            or os.getenv("GEMINI_MODEL")
+            or self.settings.ai_model
+            or "gemini-3.8-flash"
+        )
         self._client: Optional[genai.Client] = None
 
         if self.api_key:

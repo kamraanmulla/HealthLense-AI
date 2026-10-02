@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
 import { authApi, getToken, clearTokens } from './api';
+import { queryClient } from './queryClient';
 import type { UserResponse } from '../types/api';
 
 interface AuthState {
@@ -41,18 +42,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const login = async (email: string, password: string) => {
+    queryClient.clear();
     await authApi.login({ email, password });
     const u = await authApi.me();
     setUser(u);
   };
 
   const register = async (email: string, password: string, fullName?: string) => {
+    queryClient.clear();
     await authApi.register({ email, password, full_name: fullName });
     await login(email, password);
   };
 
   const logout = () => {
     authApi.logout();
+    queryClient.clear();
     setUser(null);
   };
 

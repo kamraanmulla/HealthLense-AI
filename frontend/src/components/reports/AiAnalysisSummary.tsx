@@ -16,16 +16,16 @@ export default function AiAnalysisSummary({ aiResult }: AiAnalysisSummaryProps) 
   );
 
   return (
-    <GlassCard className="p-7 bg-white border border-[#E2E8F0] shadow-sm h-full flex flex-col">
-      <div className="flex items-center gap-3 mb-6">
-        <div className="w-10 h-10 rounded-xl bg-[#F0FDF4] border border-[#DCFCE7] flex items-center justify-center text-[#16A34A]">
+    <div className="card-futuristic p-6 sm:p-7 shadow-card h-full flex flex-col">
+      <div className="flex items-center gap-3.5 mb-6">
+        <div className="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-600">
           <FileCheck className="w-5 h-5 stroke-[2]" />
         </div>
         <div>
-          <h2 className="text-xl font-bold text-[#172033] tracking-tight">
+          <h2 className="text-xl font-bold font-display text-slate-900 tracking-tight">
             Health Summary & Insights
           </h2>
-          <p className="text-xs text-[#64748B]">Automated clinical interpretation and educational findings</p>
+          <p className="text-xs text-slate-500 font-medium">Automated clinical interpretation and educational findings</p>
         </div>
       </div>
 
@@ -89,6 +89,6 @@ export default function AiAnalysisSummary({ aiResult }: AiAnalysisSummaryProps) 
           </ul>
         </div>
       )}
-    </GlassCard>
+    </div>
   );
 }

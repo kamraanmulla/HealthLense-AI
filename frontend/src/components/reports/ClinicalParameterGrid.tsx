@@ -47,7 +47,7 @@ export default function ClinicalParameterGrid({ parameters, explanations }: Clin
             const isNormal = statusLower === 'normal';
             const isHigh = statusLower === 'high';
             const isLow = statusLower === 'low';
-            
+
             // Calculate position in range for visual bar
             let percentInRange = 50;
             if (param.reference_min !== null && param.reference_max !== null && param.value !== null) {
@@ -61,45 +61,45 @@ export default function ClinicalParameterGrid({ parameters, explanations }: Clin
             }
 
             const explanation = explanationMap.get(param.name.toLowerCase());
-            
+
             return (
-              <motion.div 
-                key={param.id} 
+              <motion.div
+                key={param.id}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3, delay: index * 0.03 }}
                 className="h-full"
               >
-                <GlassCard 
-                  className={`p-5 h-full flex flex-col justify-between transition-all duration-200 bg-white border ${
-                    !isNormal 
-                      ? (isHigh 
-                          ? 'border-[#FECACA] hover:border-[#F87171] shadow-2xs' 
-                          : 'border-[#FDE68A] hover:border-[#FBBF24] shadow-2xs') 
-                      : 'border-[#E2E8F0] hover:border-[#CBD5E1]'
+                <div
+                  className={`card-futuristic p-5 h-full flex flex-col justify-between transition-all duration-200 border ${
+                    !isNormal
+                      ? (isHigh
+                          ? 'border-rose-300 bg-rose-50/20 hover:border-rose-400 shadow-card'
+                          : 'border-amber-300 bg-amber-50/20 hover:border-amber-400 shadow-card')
+                      : 'border-slate-200 hover:border-emerald-300 shadow-card hover:shadow-card-hover'
                   }`}
                 >
                   <div>
                     {/* Top Status & Title */}
                     <div className="flex items-start justify-between gap-2 mb-3">
-                      <h3 className="font-bold text-sm text-[#172033] truncate flex-1" title={param.name}>
+                      <h3 className="font-bold font-display text-sm text-slate-900 truncate flex-1" title={param.name}>
                         {param.name}
                       </h3>
                       {isNormal ? (
-                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[#F0FDF4] border border-[#DCFCE7] text-[#15803D] text-[10px] font-bold uppercase tracking-wider shrink-0">
-                          <CheckCircle2 className="w-3 h-3 text-[#16A34A]" /> Normal
+                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-[10px] font-bold uppercase tracking-wider shrink-0">
+                          <CheckCircle2 className="w-3 h-3 text-emerald-600" /> Normal
                         </span>
                       ) : isHigh ? (
-                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[#FEF2F2] border border-[#FECACA] text-[#DC2626] text-[10px] font-bold uppercase tracking-wider shrink-0">
+                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-rose-50 border border-rose-200 text-rose-700 text-[10px] font-bold uppercase tracking-wider shrink-0">
                           <ArrowUp className="w-3 h-3" /> High
                         </span>
                       ) : (
-                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[#FFFBEB] border border-[#FDE68A] text-[#D97706] text-[10px] font-bold uppercase tracking-wider shrink-0">
+                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-amber-50 border border-amber-200 text-amber-700 text-[10px] font-bold uppercase tracking-wider shrink-0">
                           <ArrowDown className="w-3 h-3" /> Low
                         </span>
                       )}
                     </div>
-                    
+
                     {/* Measurement Value & Unit */}
                     <div className="flex items-baseline gap-1.5 mb-3">
                       <span className={`text-2xl font-extrabold tracking-tight ${
@@ -119,16 +119,16 @@ export default function ClinicalParameterGrid({ parameters, explanations }: Clin
                       </p>
                     )}
                   </div>
-                  
+
                   {/* Visual Reference Range Bar */}
                   <div className="mt-auto pt-3 border-t border-[#F1F5F9]">
                     <div className="w-full h-1.5 bg-[#F1F5F9] rounded-full overflow-hidden relative">
                       {/* Normal zone indicator in center */}
                       <div className="absolute inset-y-0 left-[20%] right-[20%] bg-[#DCFCE7] rounded-full" />
-                      
+
                       {/* Patient value marker */}
                       {param.value !== null && (
-                        <div 
+                        <div
                           style={{ left: `${Math.min(95, Math.max(5, percentInRange))}%` }}
                           className={`absolute top-0 bottom-0 w-2 -ml-1 rounded-full ${
                             isNormal ? 'bg-[#16A34A]' : isHigh ? 'bg-[#DC2626]' : 'bg-[#D97706]'
@@ -145,7 +145,7 @@ export default function ClinicalParameterGrid({ parameters, explanations }: Clin
                       <span>{param.reference_max !== null ? param.reference_max : 'Max'}</span>
                     </div>
                   </div>
-                </GlassCard>
+                </div>
               </motion.div>
             );
           })}

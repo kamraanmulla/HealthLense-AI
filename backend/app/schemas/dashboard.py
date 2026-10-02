@@ -75,6 +75,49 @@ class ParameterTrendAPIResponse(BaseModel):
     records: List[TrendRecord] = Field(default_factory=list)
 
 
+class KeyBiomarker(BaseModel):
+    name: str
+    display_name: str
+    value: float
+    unit: str
+    reference_range: str
+    status: str  # normal | low | high
+    min_ref: Optional[float] = None
+    max_ref: Optional[float] = None
+    category: Optional[str] = None
+
+
+class HealthCategoryBreakdown(BaseModel):
+    metabolic: Optional[int] = None
+    cardiovascular: Optional[int] = None
+    nutritional: Optional[int] = None
+    lifestyle: Optional[int] = None
+
+
+class RecentActivityItem(BaseModel):
+    id: str
+    title: str
+    description: str
+    time_ago: str
+    type: str  # report | analysis | profile | insight
+    timestamp: datetime
+
+
+class DashboardRecentReport(BaseModel):
+    id: str
+    name: str
+    date: str
+    status: str
+    health_score: Optional[float] = None
+    risk_level: Optional[str] = None
+
+
+class NextCheckupInfo(BaseModel):
+    date_str: str
+    days_left: int
+    recommendation: str
+
+
 class DashboardResponse(BaseModel):
     """
     Full dashboard payload updated for personalized health intelligence.
@@ -94,3 +137,11 @@ class DashboardResponse(BaseModel):
     stats: DashboardStats
     health_timeline: List[HealthTimelinePoint] = Field(default_factory=list)
     parameter_trends: List[ParameterTrend] = Field(default_factory=list)
+
+    # Reference UI Extensions
+    key_biomarkers: List[KeyBiomarker] = Field(default_factory=list)
+    health_score_breakdown: Optional[HealthCategoryBreakdown] = None
+    recent_activity: List[RecentActivityItem] = Field(default_factory=list)
+    recent_reports_list: List[DashboardRecentReport] = Field(default_factory=list)
+    total_biomarkers: int = 0
+    next_checkup: Optional[NextCheckupInfo] = None

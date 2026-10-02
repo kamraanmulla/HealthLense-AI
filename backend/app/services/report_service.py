@@ -27,6 +27,9 @@ from app.services.health.score_calculator import calculate_health_score
 from app.services.health.validator import validate_parameters
 from app.services.ocr.pipeline import extract_report_text
 from app.ml.predictor import get_anomaly_predictor
+from app.experiments.exp1_data_foundation import DataFoundationService
+from app.experiments.exp2_graph_traversal import MedicalKnowledgeGraph
+from app.experiments.exp5_rule_engine import RuleEngine
 
 logger = get_logger(__name__)
 
@@ -118,6 +121,56 @@ async def process_report_background(report_id: str) -> None:
                 "No medical parameters could be extracted from this report. "
                 "Please verify that the document is a standard medical blood test or lab report."
             )
+
+        # ── Experiment 1: Data Foundation Validation, Normalization & Quality Score
+        data_foundation_svc = DataFoundationService()
+        data_foundation_summary = data_foundation_svc.summarize_report_parameters(validated_parameters)
+
+        # ── Experiment 5: Rule Engine Inference on Verified Report Parameters
+        rule_engine = RuleEngine()
+        rule_facts: Dict[str, Any] = {}
+        for param in validated_parameters:
+            p_name = param.get("parameter_name", "").lower().strip()
+            p_status = param.get("status")
+            if p_status == "low":
+                if "hemo" in p_name: rule_facts["hemoglobin_low"] = True
+                elif "mcv" in p_name: rule_facts["mcv_low"] = True
+                elif "ferritin" in p_name: rule_facts["ferritin_low"] = True
+                elif "hdl" in p_name: rule_facts["hdl_low"] = True
+            elif p_status == "high":
+                if "glucose" in p_name: rule_facts["glucose_fasting_high"] = True
+                elif "hba1c" in p_name: rule_facts["hba1c_high"] = True
+                elif "creatinine" in p_name: rule_facts["creatinine_high"] = True
+                elif "urea" in p_name or "bun" in p_name: rule_facts["bun_high"] = True
+                elif "ldl" in p_name: rule_facts["ldl_high"] = True
+
+        rule_inference_result: Optional[Dict[str, Any]] = None
+        if rule_facts:
+            forward_res = rule_engine.forward_chain(rule_facts)
+            rule_inference_result = {
+                "active_facts": list(rule_facts.keys()),
+                "rules_fired": forward_res.fired_rules,
+                "derived_findings": forward_res.derived_facts,
+                "audit_trace": forward_res.trace,
+            }
+
+        # ── Experiment 2: Knowledge Graph Traversal Context
+        kg_svc = MedicalKnowledgeGraph()
+        kg_context: List[Dict[str, Any]] = []
+        for param in validated_parameters:
+            mapped_concept = kg_svc.map_parameter_to_concept(param.get("parameter_name", ""))
+            if mapped_concept:
+                bfs_res = kg_svc.breadth_first_search(mapped_concept)
+                if bfs_res.path:
+                    kg_context.append({
+                        "parameter": param.get("parameter_name"),
+                        "concept": mapped_concept,
+                        "status": param.get("status", "normal"),
+                        "path": bfs_res.path[:4],
+                        "related_nodes": [t["node"] for t in bfs_res.traversal_tree[:3] if t["node"] != mapped_concept],
+                    })
+            if len(kg_context) >= 3:
+                break
 
         # 4. Deterministic Health Score & Disease Detection (55-70%)
         _set_progress(report_id, 65, "Calculating clinical health score and evaluating indicators...")
@@ -273,6 +326,9 @@ async def process_report_background(report_id: str) -> None:
         ai_result["confidence_pct"] = confidence_pct
         ai_result["score_explanation"] = serialized_explanations
         ai_result["detected_conditions"] = serialized_conditions
+        ai_result["data_foundation"] = data_foundation_summary
+        ai_result["rule_engine_findings"] = rule_inference_result
+        ai_result["knowledge_graph_context"] = kg_context
 
         # Inject ML anomaly detection result into AI result blob
         if ml_anomaly_result and isinstance(ml_anomaly_result, dict):

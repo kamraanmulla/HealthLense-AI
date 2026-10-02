@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { AlertCircle, FileText, Sparkles } from 'lucide-react';
+import { AlertCircle, FileText } from 'lucide-react';
 import { reportsApi } from '../lib/api';
+import { invalidateHealthQueries } from '../lib/queryClient';
 import PageTransition from '../components/ui/PageTransition';
 import UploadZone from '../components/upload/UploadZone';
 import ProcessingStatus from '../components/upload/ProcessingStatus';
@@ -25,7 +26,7 @@ export default function Upload() {
     setErrorMsg(null);
     setProgress(10);
     setStageText('Securely transmitting document to analysis cluster...');
-    
+
     try {
       const res = await reportsApi.upload(file);
       setReportId(res.id);
@@ -71,10 +72,17 @@ export default function Upload() {
         const res = await reportsApi.status(reportId);
         if (res.status === 'completed') {
           setProgress(100);
-          setStageText('Processing complete! Loading report details...');
+          setStageText('Processing complete! Loading report archive...');
           setStatus('completed');
           clearInterval(interval);
-          setTimeout(() => navigate(`/reports/${reportId}`), 1800);
+
+          // Invalidate and trigger immediate refetch across all queries
+          await invalidateHealthQueries();
+
+          // Smooth redirect to My Reports page
+          setTimeout(() => {
+            navigate('/reports');
+          }, 1400);
         } else if (res.status === 'failed') {
           setStatus('error');
           const backendError = res.error_message || '';
@@ -100,31 +108,36 @@ export default function Upload() {
       } catch {
         // Ignore transient network errors during polling
       }
-    }, 2000);
+    }, 1500);
 
     return () => clearInterval(interval);
   }, [status, reportId, navigate]);
 
   return (
     <PageTransition>
-      <div className="flex flex-col items-center justify-center min-h-[calc(100vh-160px)]">
-        
+      <div className="flex flex-col items-center justify-center min-h-[calc(100vh-160px)] px-4">
+
         {/* Header / Text section */}
         <AnimatePresence mode="wait">
           {(status === 'idle' || status === 'error') && (
-            <motion.div 
-              initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20, transition: { duration: 0.2 } }}
+            <motion.div
+              initial={{ opacity: 0, y: -15 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -15, transition: { duration: 0.2 } }}
               className="text-center mb-10 max-w-2xl"
             >
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#F0FDF4] border border-[#DCFCE7] mb-6">
-                <Sparkles className="w-3.5 h-3.5 text-[#16A34A]" />
-                <span className="text-xs font-bold text-[#15803D] uppercase tracking-wider">AI Medical Intelligence</span>
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-700 text-xs font-semibold mb-5">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                </span>
+                <span>NEURAL DOCUMENT INGESTION</span>
+                <span className="text-slate-300">|</span>
+                <span className="text-emerald-800 font-bold">OCR v2.4</span>
               </div>
-              <h1 className="text-4xl sm:text-5xl font-extrabold text-[#172033] tracking-tight mb-4 leading-tight">
-                Upload your medical report
+              <h1 className="text-3xl sm:text-5xl font-extrabold font-display text-slate-900 tracking-tight mb-4 leading-tight">
+                Analyze your medical report
               </h1>
-              <p className="text-[#64748B] text-lg font-medium">
-                Our advanced AI will extract parameters, calculate your health index, and provide personalized clinical insights instantly.
+              <p className="text-slate-600 text-base sm:text-lg font-normal max-w-xl mx-auto">
+                Securely extract clinical biomarkers, evaluate biological ranges, and generate personalized actionable insights in seconds.
               </p>
             </motion.div>
           )}
@@ -132,7 +145,7 @@ export default function Upload() {
 
         <div className="w-full max-w-4xl relative">
           <AnimatePresence mode="wait">
-            
+
             {/* Idle / Error State */}
             {(status === 'idle' || status === 'error') && (
               <motion.div
@@ -143,14 +156,14 @@ export default function Upload() {
                 transition={{ type: "spring", duration: 0.5 }}
                 className="w-full"
               >
-                <UploadZone 
+                <UploadZone
                   onFileSelect={(f) => { setFile(f); setStatus('idle'); setErrorMsg(null); }}
                   selectedFile={file}
                   onUpload={handleUpload}
                 />
 
                 {errorMsg && (
-                  <motion.div 
+                  <motion.div
                     initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
                     className="mt-6 p-4 rounded-xl bg-[#FEF2F2] border border-[#FECACA] flex items-center justify-center gap-3 text-[#DC2626] max-w-md mx-auto"
                   >
@@ -158,7 +171,7 @@ export default function Upload() {
                     <span className="font-bold text-sm">{errorMsg}</span>
                   </motion.div>
                 )}
-                
+
                 {/* Security Trust Badges */}
                 <div className="flex items-center justify-center gap-8 mt-12 opacity-50">
                   <div className="flex items-center gap-2">
@@ -183,8 +196,8 @@ export default function Upload() {
                 transition={{ type: "spring", duration: 0.5 }}
                 className="w-full max-w-2xl mx-auto"
               >
-                <ProcessingStatus 
-                  progress={progress} 
+                <ProcessingStatus
+                  progress={progress}
                   statusText={stageText}
                 />
               </motion.div>
@@ -199,7 +212,7 @@ export default function Upload() {
                 transition={{ type: "spring", duration: 0.6, bounce: 0.4 }}
                 className="w-full max-w-2xl mx-auto"
               >
-                <UploadSuccess />
+                <UploadSuccess reportId={reportId} />
               </motion.div>
             )}
 

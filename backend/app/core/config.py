@@ -62,7 +62,8 @@ class Settings(BaseSettings):
 
     # AI
     ai_provider: str = "gemini"
-    ai_model: str = "gemini-2.5-flash"
+    ai_model: str = "gemini-3.8-flash"
+    gemini_model: Optional[str] = None
     gemini_api_key: Optional[str] = None
     ai_timeout_seconds: int = 120
 

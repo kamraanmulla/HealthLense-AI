@@ -15,6 +15,20 @@ import type {
   DashboardResponse,
   ParameterTrendResponse,
   ChatResponse,
+  ConceptExploreResponse,
+  PathwaySearchResponse,
+  OptimizationBenchmarkRequest,
+  OptimizationBenchmarkResponse,
+  LogicEvaluationRequest,
+  LogicEvaluationResponse,
+  MetricTrajectoryResponse,
+  CohortClassifyRequest,
+  CohortClassifyResponse,
+  ClusterExplorationResponse,
+  NLPAnalysisRequest,
+  NLPAnalysisResponse,
+  AssistantChatRequest,
+  AssistantChatResponse,
 } from '../types/api';
 
 const api = axios.create({
@@ -169,6 +183,56 @@ export const dashboardApi = {
 export const trendsApi = {
   get: (parameter: string) =>
     api.get<ParameterTrendResponse>(`/health/trends/${parameter}`).then((r) => r.data),
+};
+
+// ── Insights & Advanced Analytics API ────────────────────────────────────────
+
+export const insightsApi = {
+  exploreKnowledgeGraph: (concept = 'Cardiovascular', target?: string, mode = 'breadth', report_id?: string) => {
+    const params: Record<string, string> = { concept, mode };
+    if (target) params.target = target;
+    if (report_id) params.report_id = report_id;
+    return api
+      .get<ConceptExploreResponse>('/insights/knowledge-graph/explore', { params })
+      .then((r) => r.data);
+  },
+  navigatePathway: (startPanel = 'Patient Intake', targetMarker = 'Serum Creatinine', strategy = 'optimal') => {
+    const params = { start_panel: startPanel, target_marker: targetMarker, strategy };
+    return api
+      .get<PathwaySearchResponse>('/insights/search/pathway', { params })
+      .then((r) => r.data);
+  },
+  runOptimization: (payload: OptimizationBenchmarkRequest) =>
+    api
+      .post<OptimizationBenchmarkResponse>('/insights/optimization/benchmark', payload)
+      .then((r) => r.data),
+  explainLogic: (payload: LogicEvaluationRequest) =>
+    api
+      .post<LogicEvaluationResponse>('/insights/logic/explain', payload)
+      .then((r) => r.data),
+  getTrajectory: (parameter: string) =>
+    api
+      .get<MetricTrajectoryResponse>(`/insights/trends/trajectory/${encodeURIComponent(parameter)}`)
+      .then((r) => r.data),
+  classifyCohort: (payload: CohortClassifyRequest) =>
+    api
+      .post<CohortClassifyResponse>('/insights/cohort/classify', payload)
+      .then((r) => r.data),
+  exploreClusters: (clusters = 3, source: 'user' | 'demo' = 'user') =>
+    api
+      .get<ClusterExplorationResponse>('/insights/clustering/cohorts', { params: { clusters, source } })
+      .then((r) => r.data),
+  analyzeNLP: (payload: NLPAnalysisRequest) =>
+    api
+      .post<NLPAnalysisResponse>('/insights/nlp/analyze', payload)
+      .then((r) => r.data),
+};
+
+// ── Conversational AI Assistant API ──────────────────────────────────────────
+
+export const assistantApi = {
+  chat: (data: AssistantChatRequest) =>
+    api.post<AssistantChatResponse>('/assistant/chat', data).then((r) => r.data),
 };
 
 export { getToken, clearTokens, setTokens };

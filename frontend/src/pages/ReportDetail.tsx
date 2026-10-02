@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { reportsApi } from '../lib/api';
+import { invalidateHealthQueries } from '../lib/queryClient';
 import PageTransition from '../components/ui/PageTransition';
 import GlassCard from '../components/ui/GlassCard';
 import HealthGauge from '../components/ui/HealthGauge';
@@ -14,6 +15,7 @@ import AIHealthSummaryComponent from '../components/ai/AIHealthSummary';
 import ReportChatAssistant from '../components/ai/ReportChatAssistant';
 import ClinicalParameterGrid from '../components/reports/ClinicalParameterGrid';
 import HealthPatternInsights from '../components/reports/HealthPatternInsights';
+import ReportAiExperiments from '../components/reports/ReportAiExperiments';
 import { motion } from 'framer-motion';
 import { Activity, ShieldCheck, HeartPulse, FileText, CheckCircle2 } from 'lucide-react';
 
@@ -37,6 +39,7 @@ export default function ReportDetail() {
     if (!id || !confirm('Are you sure you want to delete this report?')) return;
     try {
       await reportsApi.delete(id);
+      await invalidateHealthQueries();
       navigate('/reports');
     } catch (err) {
       console.error(err);
@@ -86,7 +89,7 @@ export default function ReportDetail() {
   return (
     <PageTransition>
       {/* 1. Report Information Header */}
-      <ReportHeader 
+      <ReportHeader
         reportId={report.id}
         filename={report.original_filename}
         createdAt={report.created_at}
@@ -96,39 +99,44 @@ export default function ReportDetail() {
 
       {/* 2. Overall Health Status, Health Score & Risk Level */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-        
+
         {/* Score Card */}
         <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }} className="h-full">
-          <GlassCard className="h-full p-6 flex flex-col justify-between bg-white border border-[#E2E8F0] shadow-sm">
+          <div className="card-futuristic h-full p-6 flex flex-col justify-between shadow-card relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-36 h-36 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none" />
             <div>
-              <span className="text-[11px] font-bold text-[#16A34A] uppercase tracking-wider block mb-1">
-                Clinical Evaluation
-              </span>
+              <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-700 text-[10px] font-semibold mb-2">
+                <span className="relative flex h-1.5 w-1.5">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
+                </span>
+                <span>CALIBRATED INDEX</span>
+              </div>
               <div className="flex items-center justify-between">
-                <h2 className="text-lg font-bold text-[#172033] tracking-tight">
-                  Health Score
+                <h2 className="text-lg font-bold font-display text-slate-900 tracking-tight">
+                  Health Index
                 </h2>
                 {report.health_grade && (
-                  <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#F0FDF4] border border-[#DCFCE7] text-[#15803D]">
-                    Grade {report.health_grade}
+                  <span className="px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 border border-emerald-200 text-emerald-800">
+                    Tier {report.health_grade}
                   </span>
                 )}
               </div>
             </div>
-            
+
             <div className="my-4 flex flex-col items-center justify-center">
-              <HealthGauge score={report.health_score || 0} size={180} />
+              <HealthGauge score={report.health_score || 0} size={190} />
             </div>
-            
-            <div className="flex flex-col items-center gap-2 pt-2 border-t border-[#F1F5F9]">
+
+            <div className="flex flex-col items-center gap-2 pt-3 border-t border-slate-100">
               <RiskBadge level={report.risk_level || 'UNKNOWN'} />
               {report.confidence_pct && (
-                <span className="text-[11px] text-[#64748B] font-medium">
-                  Analysis Confidence: {report.confidence_pct}%
+                <span className="text-xs text-slate-400 font-medium">
+                  Calibration Confidence: <strong className="text-slate-700 font-mono">{report.confidence_pct}%</strong>
                 </span>
               )}
             </div>
-          </GlassCard>
+          </div>
         </motion.div>
 
         {/* Health Summary & Key Findings */}
@@ -139,8 +147,8 @@ export default function ReportDetail() {
 
       {/* 3. Health Parameters Grid */}
       <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.15 }}>
-        <ClinicalParameterGrid 
-          parameters={report.parameters || []} 
+        <ClinicalParameterGrid
+          parameters={report.parameters || []}
           explanations={report.ai_result?.score_explanation || null}
         />
       </motion.div>
@@ -149,6 +157,13 @@ export default function ReportDetail() {
       {report.ai_result?.ml_anomaly_detection && report.ai_result.ml_anomaly_detection.anomaly_level !== 'unavailable' && (
         <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.17 }} className="mt-8">
           <HealthPatternInsights mlResult={report.ai_result.ml_anomaly_detection} />
+        </motion.div>
+      )}
+
+      {/* 3c. Integrated Report AI Experiments (Exp 1, 2, 5) */}
+      {report.ai_result && (
+        <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.18 }} className="mt-8">
+          <ReportAiExperiments aiResult={report.ai_result} reportId={report.id} />
         </motion.div>
       )}
 

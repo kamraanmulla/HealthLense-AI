@@ -12,27 +12,33 @@ import Upload from './pages/Upload';
 import Reports from './pages/Reports';
 import ReportDetail from './pages/ReportDetail';
 import Analytics from './pages/Analytics';
+import HealthInsights from './pages/HealthInsights';
+import Assistant from './pages/Assistant';
 import Profile from './pages/Profile';
+import Settings from './pages/Settings';
 import Onboarding from './pages/Onboarding';
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, isLoading, user } = useAuth();
-  
+
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-[#020617] flex items-center justify-center">
-        <div className="skeleton w-32 h-32 rounded-full opacity-50"></div>
+      <div className="min-h-screen bg-[#F8FAFC] flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <div className="skeleton w-16 h-16 rounded-2xl" />
+          <div className="skeleton w-32 h-3 rounded-lg" />
+        </div>
       </div>
     );
   }
-  
+
   if (!isAuthenticated) return <Navigate to="/login" replace />;
   return <>{children}</>;
 }
 
 function OnboardingGuard({ children }: { children: React.ReactNode }) {
   const { user } = useAuth();
-  
+
   // If user hasn't completed onboarding, redirect to /onboarding
   if (user && !user.onboarding_completed) {
     return <Navigate to="/onboarding" replace />;
@@ -78,10 +84,12 @@ export default function App() {
           <Route path="reports" element={<Reports />} />
           <Route path="reports/:id" element={<ReportDetail />} />
           <Route path="analytics" element={<Analytics />} />
+          <Route path="insights" element={<HealthInsights />} />
+          <Route path="assistant" element={<Assistant />} />
           <Route path="profile" element={<Profile />} />
+          <Route path="settings" element={<Settings />} />
         </Route>
       </Routes>
     </BrowserRouter>
   );
 }
-
