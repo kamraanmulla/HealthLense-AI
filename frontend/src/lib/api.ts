@@ -32,7 +32,7 @@ import type {
 } from '../types/api';
 
 const api = axios.create({
-  baseURL: '/api/v1',
+  baseURL: 'https://healthlens-ai-backend-gl4k.onrender.com/api/v1',
   headers: { 'Content-Type': 'application/json' },
 });
 
@@ -93,9 +93,12 @@ api.interceptors.response.use(
         return Promise.reject(error);
       }
       try {
-        const { data } = await axios.post<TokenResponse>('/api/v1/auth/refresh', {
-          refresh_token: refresh,
-        });
+        const { data } = await axios.post<TokenResponse>(
+  'https://healthlens-ai-backend-gl4k.onrender.com/api/v1/auth/refresh',
+  {
+    refresh_token: refresh,
+  }
+);
         setTokens(data.access_token, data.refresh_token);
         processQueue(null, data.access_token);
         original.headers.Authorization = `Bearer ${data.access_token}`;
