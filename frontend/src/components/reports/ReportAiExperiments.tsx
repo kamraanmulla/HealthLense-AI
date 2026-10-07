@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+﻿import { Link } from 'react-router-dom';
 import type { AIAnalysisResult } from '../../types/api';
 import GlassCard from '../ui/GlassCard';
 import {
@@ -146,9 +146,9 @@ export default function ReportAiExperiments({ aiResult, reportId }: ReportAiExpe
                   </span>
                 </div>
 
-                {ruleEngine.fired_rules.length > 0 ? (
+                {(ruleEngine.fired_rules ?? []).length > 0 ? (
                   <div className="space-y-1.5 max-h-32 overflow-y-auto custom-scrollbar">
-                    {ruleEngine.fired_rules.slice(0, 3).map((r: { name: string; supporting_facts?: string[] }, i: number) => (
+                    {(ruleEngine.fired_rules ?? []).slice(0, 3).map((r: { name: string; supporting_facts?: string[] }, i: number) => (
                       <div key={i} className="p-2 rounded-lg bg-[#F0FDF4] border border-[#DCFCE7] text-[11px]">
                         <p className="font-bold text-[#15803D]">{r.name}</p>
                         {r.supporting_facts && r.supporting_facts.length > 0 && (
