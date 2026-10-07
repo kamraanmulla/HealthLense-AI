@@ -415,6 +415,15 @@ def get_metric_trajectory(
 
     data_points = df.to_dict(orient="records") if not df.empty else []
 
+    plot_b64 = None
+    if len(valid_vals) >= 2:
+        unit_str = str(raw_measurements[0].get("unit", "")) if raw_measurements else ""
+        plot_b64 = data_foundation.generate_distribution_plot_base64(
+            title=f"{parameter.title()} Distribution",
+            values=valid_vals,
+            unit=unit_str,
+        )
+
     return MetricTrajectoryResponse(
         parameter_name=parameter,
         total_observations=len(raw_measurements),
@@ -429,6 +438,7 @@ def get_metric_trajectory(
         ),
         insufficient_data_reason=insufficient_reason,
         fitted_points=fitted_points,
+        matplotlib_plot_base64=plot_b64,
     )
 
 

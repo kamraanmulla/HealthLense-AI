@@ -360,3 +360,25 @@ def test_exp9_query_intent_and_grounded_prompt():
     assert "Mild Microcytic Profile" in res.grounded_context_prompt
     assert "DO NOT INVENT OTHER MEASUREMENTS" in res.grounded_context_prompt
     assert res.query_intent == "explanation"
+
+
+def test_exp1_matplotlib_distribution_plot():
+    svc = DataFoundationService()
+    # Test valid biomarker list produces clean base64 Matplotlib image
+    values = [85.0, 92.0, 88.0, 110.0, 95.0, 99.0, 102.0]
+    plot_b64 = svc.generate_distribution_plot_base64("Fasting Glucose", values, unit="mg/dL")
+    assert plot_b64 is not None
+    assert plot_b64.startswith("data:image/png;base64,")
+
+    # Edge case: single value returns None
+    assert svc.generate_distribution_plot_base64("Single", [95.0]) is None
+
+
+def test_exp2_symptom_followup_traversal():
+    kg = MedicalKnowledgeGraph()
+    # Test traversing from Biomarker -> Concern -> Follow-up
+    res = kg.breadth_first_search("Fasting Glucose", "Fasting Re-test & Nutritional Counseling")
+    assert res.start_node == "Fasting Glucose"
+    assert res.target_node == "Fasting Re-test & Nutritional Counseling"
+    assert "Glycemic Dysregulation Concern" in res.path
+    assert res.distance == 2

@@ -226,20 +226,28 @@ def test_api_clustering_cohorts(auth_headers):
 # ── 9. AI Health Assistant & NLP Grounding (Exp 9 NLP + Assistant) ─────────────
 def test_api_assistant_chat(auth_headers):
     headers, _ = auth_headers
+    from unittest.mock import patch, AsyncMock
 
-    # General explanation query
-    res = client.post(
-        "/api/v1/assistant/chat",
-        json={"question": "What is the role of hemoglobin in blood oxygenation?"},
-        headers=headers,
-    )
-    assert res.status_code == 200
-    data = res.json()
-    assert len(data["reply"]) > 10
-    assert data["classified_intent"] == "explanation"
-    assert "Hemoglobin" in data["referenced_biomarkers"]
-    assert data["is_report_specific"] is False
-    assert "educational" in data["disclaimer"].lower()
+    mock_reply = {
+        "answer": "Hemoglobin is an iron-containing protein in red blood cells that carries oxygen from the respiratory organs.",
+        "disclaimer": "Educational analysis only. Please consult a qualified healthcare provider."
+    }
+
+    with patch("app.services.ai.gemini_provider.GeminiProvider.chat_with_report", new_callable=AsyncMock) as mock_chat:
+        mock_chat.return_value = mock_reply
+        # General explanation query
+        res = client.post(
+            "/api/v1/assistant/chat",
+            json={"question": "What is the role of hemoglobin in blood oxygenation?"},
+            headers=headers,
+        )
+        assert res.status_code == 200
+        data = res.json()
+        assert len(data["reply"]) > 10
+        assert data["classified_intent"] == "explanation"
+        assert "Hemoglobin" in data["referenced_biomarkers"]
+        assert data["is_report_specific"] is False
+        assert "educational" in data["disclaimer"].lower()
 
     # Unauthorized report access check
     res_bad_report = client.post(

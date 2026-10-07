@@ -17,6 +17,11 @@ from typing import Any, Dict, List, Optional, Tuple, Union
 import numpy as np
 import pandas as pd
 
+# Experiment 1: Matplotlib headless environment configuration
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
+
 
 class DataFoundationService:
     """Production-grade structured health data processor."""
@@ -201,6 +206,65 @@ class DataFoundationService:
             "total_observations": len(valid_df),
         }
 
+    def generate_distribution_plot_base64(
+        self,
+        title: str = "Biomarker Distribution Profile",
+        values: Optional[List[float]] = None,
+        unit: str = "",
+    ) -> Optional[str]:
+        """
+        Experiment 1: Matplotlib Data Visualization.
+        Generates a clean statistical distribution histogram & density curve
+        using Matplotlib in headless Agg mode and returns a base64 encoded PNG.
+        """
+        data = [v for v in (values or []) if v is not None and not np.isnan(v)]
+        if len(data) < 2:
+            return None
+
+        try:
+            fig, ax = plt.subplots(figsize=(6.5, 3.5), dpi=100)
+            fig.patch.set_facecolor("#FFFFFF")
+            ax.set_facecolor("#F8FAFC")
+
+            # Histogram
+            n, bins, patches = ax.hist(
+                data,
+                bins=min(len(data), 8),
+                color="#10B981",
+                edgecolor="#047857",
+                alpha=0.7,
+                density=False,
+                label="Observation Frequency",
+            )
+
+            # Overlay statistical reference lines
+            mean_val = float(np.mean(data))
+            median_val = float(np.median(data))
+            ax.axvline(mean_val, color="#0284C7", linestyle="--", linewidth=1.8, label=f"Mean: {mean_val:.1f}{(' ' + unit) if unit else ''}")
+            ax.axvline(median_val, color="#D97706", linestyle=":", linewidth=1.8, label=f"Median: {median_val:.1f}{(' ' + unit) if unit else ''}")
+
+            # Clean styling
+            ax.set_title(f"Exp 1: {title} (Matplotlib)", fontsize=11, fontweight="bold", color="#0F172A", pad=12)
+            ax.set_xlabel(f"Measured Value{(' (' + unit + ')') if unit else ''}", fontsize=9, color="#475569")
+            ax.set_ylabel("Count", fontsize=9, color="#475569")
+            ax.grid(True, linestyle=":", alpha=0.5, color="#CBD5E1")
+            ax.legend(loc="upper right", fontsize=8, framealpha=0.9)
+            ax.tick_params(colors="#475569", labelsize=8)
+
+            for spine in ax.spines.values():
+                spine.set_color("#E2E8F0")
+
+            plt.tight_layout()
+
+            buf = io.BytesIO()
+            plt.savefig(buf, format="png", bbox_inches="tight")
+            plt.close(fig)
+            buf.seek(0)
+            encoded = base64.b64encode(buf.read()).decode("utf-8")
+            return f"data:image/png;base64,{encoded}"
+        except Exception:
+            return None
+
     def summarize_report_parameters(
         self, parameters: List[Dict[str, Any]]
     ) -> Dict[str, Any]:
@@ -210,10 +274,12 @@ class DataFoundationService:
         - Standardizes units where possible
         - Computes NumPy/Pandas descriptive statistics
         - Produces a data quality score and audit metrics
+        - Generates Matplotlib distribution profile visualization
         """
         df, audit = self.validate_and_clean_measurements(parameters)
         valid_vals = df[df["is_valid"]]["normalized_value"].dropna().tolist() if not df.empty else []
         stats = self.compute_descriptive_statistics(valid_vals)
+        plot_base64 = self.generate_distribution_plot_base64("Extracted Biomarkers", valid_vals)
 
         return {
             "total_parameters": audit["total"],
@@ -222,5 +288,6 @@ class DataFoundationService:
             "data_quality_score": audit["data_quality_score"],
             "missing_rate": audit["missing_rate"],
             "descriptive_statistics": stats,
-            "processing_engine": "NumPy & Pandas Clinical Data Foundation",
+            "matplotlib_visualization_base64": plot_base64,
+            "processing_engine": "NumPy, Pandas & Matplotlib Clinical Data Foundation",
         }

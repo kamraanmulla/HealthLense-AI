@@ -14,7 +14,7 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Any, Dict, List, Optional
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 
 # ── Parameter schemas ─────────────────────────────────────────────────────────
@@ -105,6 +105,8 @@ class LongitudinalChange(BaseModel):
 
 class MLAnomalyDetectionResult(BaseModel):
     """Structured ML Isolation Forest anomaly detection findings."""
+    model_config = ConfigDict(protected_namespaces=())
+
     anomaly_detected: bool = Field(False, description="Whether an unusual multivariable pattern was detected")
     anomaly_level: str = Field("normal", description="'normal' | 'low' | 'medium' | 'high' | 'unavailable'")
     anomaly_score: Optional[float] = Field(None, description="Calibrated anomaly severity score 0.0 to 1.0")

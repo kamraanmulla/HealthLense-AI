@@ -97,6 +97,7 @@ class MetricTrajectoryResponse(BaseModel):
     educational_disclaimer: str
     insufficient_data_reason: Optional[str] = None
     fitted_points: Optional[List[Dict[str, float]]] = None
+    matplotlib_plot_base64: Optional[str] = None
 
 
 # ── 6. Cohort Similarity Benchmark (Exp 7 Classification) ─────────────────────

@@ -104,19 +104,48 @@ class MedicalKnowledgeGraph:
             ("Serum Iron", "measures", 1.0),
             ("Hemoglobin", "modulates", 1.1),
         ],
-        # Leaf biomarker connections back to high-level concepts for bidirectionality
-        "Total Cholesterol": [("Lipid Profile", "belongs_to", 1.0)],
+        # Leaf biomarker connections back to panels and to educational Health Concern / Follow-up nodes
+        "Total Cholesterol": [
+            ("Lipid Profile", "belongs_to", 1.0),
+            ("Atherogenic Risk Concern", "indicates_possible", 1.2),
+        ],
+        "Atherogenic Risk Concern": [
+            ("Lipid Follow-up & Diet Consultation", "recommended_followup", 1.0),
+        ],
+        "Lipid Follow-up & Diet Consultation": [],
         "HDL": [("Lipid Profile", "belongs_to", 1.0)],
         "LDL": [("Lipid Profile", "belongs_to", 1.0)],
         "Triglycerides": [("Lipid Profile", "belongs_to", 1.0)],
-        "Fasting Glucose": [("Glucose Regulation", "belongs_to", 1.0)],
+        "Fasting Glucose": [
+            ("Glucose Regulation", "belongs_to", 1.0),
+            ("Glycemic Dysregulation Concern", "indicates_possible", 1.2),
+        ],
+        "Glycemic Dysregulation Concern": [
+            ("Fasting Re-test & Nutritional Counseling", "recommended_followup", 1.0),
+        ],
+        "Fasting Re-test & Nutritional Counseling": [],
         "HbA1c": [("Glucose Regulation", "belongs_to", 1.0)],
-        "Hemoglobin": [("CBC", "belongs_to", 1.0), ("Iron Metabolism", "related_to", 1.1)],
+        "Hemoglobin": [
+            ("CBC", "belongs_to", 1.0),
+            ("Iron Metabolism", "related_to", 1.1),
+            ("Fatigue & Low Oxygenation Concern", "indicates_possible", 1.2),
+        ],
+        "Fatigue & Low Oxygenation Concern": [
+            ("Serum Ferritin Test & CBC Monitoring", "recommended_followup", 1.0),
+        ],
+        "Serum Ferritin Test & CBC Monitoring": [],
         "RBC": [("CBC", "belongs_to", 1.0)],
         "WBC": [("CBC", "belongs_to", 1.0)],
         "Platelets": [("CBC", "belongs_to", 1.0)],
         "MCV": [("CBC", "belongs_to", 1.0)],
-        "Creatinine": [("Kidney Function", "belongs_to", 1.0)],
+        "Creatinine": [
+            ("Kidney Function", "belongs_to", 1.0),
+            ("Reduced Filtration Concern", "indicates_possible", 1.2),
+        ],
+        "Reduced Filtration Concern": [
+            ("Renal Function Panel & Hydration Review", "recommended_followup", 1.0),
+        ],
+        "Renal Function Panel & Hydration Review": [],
         "Urea": [("Kidney Function", "belongs_to", 1.0)],
         "SGOT (AST)": [("Liver Function", "belongs_to", 1.0)],
         "SGPT (ALT)": [("Liver Function", "belongs_to", 1.0)],

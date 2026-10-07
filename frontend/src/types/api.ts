@@ -219,6 +219,7 @@ export interface AIAnalysisResult {
     outliers_flagged: number;
     missing_rate: number;
     descriptive_stats?: Record<string, unknown>;
+    matplotlib_visualization_base64?: string | null;
   } | null;
   rule_engine_findings?: {
     fired_rules_count: number;
@@ -555,6 +556,7 @@ export interface MetricTrajectoryResponse {
     actual_value?: number;
     fitted_value?: number;
   }> | null;
+  matplotlib_plot_base64?: string | null;
   educational_disclaimer: string;
 }
 

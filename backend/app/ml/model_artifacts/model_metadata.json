@@ -2,54 +2,54 @@
   "model_name": "HealthLens Population Anomaly Detector",
   "model_type": "Isolation Forest (scikit-learn)",
   "model_version": "1.0.0",
-  "training_date": "2026-09-26T09:53:10.941433+00:00",
+  "training_date": "2026-10-07T14:26:12.044506+00:00",
   "training_datasets": [
     {
       "file": "BIOPRO_L.xpt",
-      "cycle": "August 2021–August 2023 (Cycle L)",
+      "cycle": "August 2021\u2013August 2023 (Cycle L)",
       "domain": "Standard Biochemistry Profile",
       "samples": 7199
     },
     {
       "file": "GHB_L.xpt",
-      "cycle": "August 2021–August 2023 (Cycle L)",
+      "cycle": "August 2021\u2013August 2023 (Cycle L)",
       "domain": "Glycohemoglobin (HbA1c)"
     },
     {
       "file": "GLU_L.xpt",
-      "cycle": "August 2021–August 2023 (Cycle L)",
+      "cycle": "August 2021\u2013August 2023 (Cycle L)",
       "domain": "Fasting Glucose"
     },
     {
       "file": "VID_L.xpt",
-      "cycle": "August 2021–August 2023 (Cycle L)",
+      "cycle": "August 2021\u2013August 2023 (Cycle L)",
       "domain": "Vitamin D"
     },
     {
       "file": "FERTIN_L.xpt",
-      "cycle": "August 2021–August 2023 (Cycle L)",
+      "cycle": "August 2021\u2013August 2023 (Cycle L)",
       "domain": "Ferritin"
     },
     {
       "file": "ALB_CR_L.xpt",
-      "cycle": "August 2021–August 2023 (Cycle L)",
+      "cycle": "August 2021\u2013August 2023 (Cycle L)",
       "domain": "Urine Albumin & Creatinine"
     },
     {
       "file": "CBC_J.xpt",
-      "cycle": "2017–2018 (Cycle J)",
+      "cycle": "2017\u20132018 (Cycle J)",
       "domain": "Complete Blood Count with 5-part Differential",
       "samples": 8366
     },
     {
       "file": "HSCRP_I.xpt",
-      "cycle": "2015–2016 (Cycle I)",
+      "cycle": "2015\u20132016 (Cycle I)",
       "domain": "High-Sensitivity CRP (hs-CRP)"
     }
   ],
   "panel_provenance": {
-    "biochemistry_metabolic": "Trained on NHANES August 2021–August 2023 (Cycle L)",
-    "hematology_cbc": "Trained on NHANES 2017–2018 (Cycle J)"
+    "biochemistry_metabolic": "Trained on NHANES August 2021\u2013August 2023 (Cycle L)",
+    "hematology_cbc": "Trained on NHANES 2017\u20132018 (Cycle J)"
   },
   "cycle_separation_guarantee": "Different NHANES survey cycles are kept explicitly separated into panel-specific models and not cross-merged across survey cohorts.",
   "panels_trained": [
@@ -62,7 +62,7 @@
   },
   "total_population_participants": 15565,
   "contamination": 0.06,
-  "contamination_wording": "Contamination parameter: 0.06 — used by Isolation Forest as the assumed proportion of training observations treated as outliers.",
+  "contamination_wording": "Contamination parameter: 0.06 \u2014 used by Isolation Forest as the assumed proportion of training observations treated as outliers.",
   "n_estimators": 150,
   "baseline_distinction": "Population anomaly detection evaluates multivariable patterns relative to the NHANES reference population. Personal longitudinal analysis calculates current-vs-previous changes from the user's own historical reports. NHANES is strictly not treated as the user's personal baseline.",
   "medical_attention_logic": "ML anomaly detection is an informational statistical signal alongside reference ranges, personal longitudinal changes, and deterministic clinical rules. ML anomaly detection alone does NOT determine medical urgency or clinical diagnosis.",
