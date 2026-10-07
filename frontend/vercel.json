@@ -1,8 +1,0 @@
-﻿{
-  "rewrites": [
-    {
-      "source": "/api/v1/:path*",
-      "destination": "https://healthlens-ai-backend-gl4k.onrender.com/api/v1/:path*"
-    }
-  ]
-}
