@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './lib/auth';
 import AuthLayout from './layouts/AuthLayout';
 import AppLayout from './layouts/AppLayout';
@@ -43,13 +43,15 @@ function OnboardingGuard({ children }: { children: React.ReactNode }) {
   if (user && !user.onboarding_completed) {
     return <Navigate to="/onboarding" replace />;
   }
+
   return <>{children}</>;
 }
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <ScrollToTop />
+
       <Routes>
         {/* Auth Routes */}
         <Route element={<AuthLayout />}>
@@ -90,6 +92,6 @@ export default function App() {
           <Route path="settings" element={<Settings />} />
         </Route>
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
